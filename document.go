@@ -2,7 +2,6 @@ package gocouch
 
 import (
     "io"
-    "strings"
 )
 
 type Document struct {
@@ -53,17 +52,7 @@ func (cl *Document)GetInfoByReversion(rev string) (j map[string]interface{}, err
 // you can do anything you want with this function
 // like GetInfoByReversion
 func (cl *Document)GetInfoByParams(params map[string]string) (j map[string]interface{}, err error) {
-
-    sl := make([]string, len(params))
-
-    for key, value := range params {
-        tmp := key + "=" + value
-        sl = append(sl, tmp)
-    }
-
-    ps := strings.Join(sl, "?")
-
-    path := cl.path() + "/" + ps
+    path := cl.joinParams(cl.path(), params)
     return cl.request(GET, path, nil)
 }
 
