@@ -70,6 +70,30 @@ func (cl *ClientBase)handParams(body map[string]interface{}) (ret *strings.Reade
 
 }
 
+func (cl *ClientBase)joinParams(path string, params map[string]string) (url string) {
+
+    sl := make([]string, len(params))
+
+    i := 0
+
+    for key, value := range params {
+        tmp := key + "=" + value
+        sl[i] = tmp
+        i = i + 1
+    }
+
+    ps := strings.Join(sl, "&")
+    p := ""
+
+    if ps == "" {
+        p = path
+    } else {
+        p = path + "?" + ps
+    }
+
+    return p
+}
+
 func (cl *ClientBase)SetHeaders(headers map[string]string) {
     cl.Headers = headers
 }
