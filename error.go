@@ -1,4 +1,4 @@
-package gocouch
+package gocouchDB
 
 import "fmt"
 

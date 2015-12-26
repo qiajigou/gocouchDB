@@ -1,1 +1,1 @@
-package gocouch
+package gocouchDB
