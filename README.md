@@ -10,11 +10,11 @@ Yet another CouchDB GO Client
     // Use Client everywhere you want :)
 
     import (
-        "github.com/GuoJing/gocouch"
+        "github.com/GuoJing/gocouchDB"
     )
 
     dsn := "http://localhost:5984"
-    client := gocouch.NewClientByDSN(dsn)
+    client := gocouchDB.NewClientByDSN(dsn)
 
     db, err := client.GetDatabase("duidui")
 
@@ -37,7 +37,7 @@ Yet another CouchDB GO Client
     //interface ITransport! <- you can do it yourself
     transport := NewTransport(dsn)
 
-    client := gocouch.NewClientByTransport(transport)
+    client := gocouchDB.NewClientByTransport(transport)
 
 ## Visit without Client
 
@@ -50,7 +50,7 @@ Yet another CouchDB GO Client
 
 ## Auth
 
-    client := gocouch.NewClientByDSN(dsn)
+    client := gocouchDB.NewClientByDSN(dsn)
     client.SetAuth(Username, Password)
     client.GetDatabase("duidui")
     // ...
@@ -65,7 +65,7 @@ Yet another CouchDB GO Client
 
 ## Replicate
 
-    task := new(gocouch.ReplicateTask)
+    task := new(gocouchDB.ReplicateTask)
     task.Continuous = false
     task.CreateTarget = true
     task.Source = "duidui"
