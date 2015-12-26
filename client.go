@@ -21,13 +21,13 @@ func NewClientByTransport(transport ITransport) *Client {
 
 // get server info
 func (cl *Client)ServerInfo() (j map[string]interface{}, err error) {
-    return cl.request(GET, "", nil)
+    return cl.do(GET, "", nil, nil)
 }
 
 // create database with dbName
 func (cl *Client)CreateDatabase(dbName string) (j map[string]interface{}, err error) {
 
-    return cl.request(PUT, dbName, nil)
+    return cl.do(PUT, dbName, nil, nil)
 }
 
 // this is a tricky function
@@ -66,12 +66,10 @@ func (cl *Client)Replicate(task *ReplicateTask) (j map[string]interface{}, err e
         body["cancel"] = task.Cancel
     }
 
-    ir, err := cl.handleBodyData(body)
-
     if err != nil {
         return j, err
     }
 
-    return cl.request(POST, "_replicate", ir)
+    return cl.do(POST, "_replicate", body, nil)
 }
 

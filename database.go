@@ -1,7 +1,5 @@
 package gocouchDB
 
-import "io"
-
 type Database struct {
     ClientBase
     Name string
@@ -17,25 +15,19 @@ func NewDatabase(dbName string, transport ITransport) *Database {
 
 // show database info
 func (cl *Database)GetInfo() (j map[string]interface{}, err error) {
-    return cl.request(GET, cl.Name, nil)
+    return cl.do(GET, cl.Name, nil, nil)
 }
 
 // delete a database
 func (cl *Database)Delete() (j map[string]interface{}, err error) {
-    return cl.request(DELETE, cl.Name, nil)
+    return cl.do(DELETE, cl.Name, nil, nil)
 }
 
 // create document
 func (cl *Database)CreateDocument(key string, body map[string]interface{}) (j map[string]interface{}, err error){
-    ir, err := cl.handleBodyData(body)
-
-    if err != nil {
-        return j, err
-    }
-
     path := cl.Name + "/" + key
 
-    return cl.request(PUT, path, ir)
+    return cl.do(PUT, path, body, nil)
 }
 
 // get document
@@ -48,13 +40,13 @@ func (cl *Database)GetDocument(key string) (d *Document, err error) {
 // get all docs
 // http://docs.couchdb.org/en/1.6.1/api/database/bulk-api.html#db-bulk-docs
 func (cl *Database)GetDocuments(params map[string]string) (j map[string]interface{}, err error){
-    return cl.doConfig(GET, "_all_docs", nil, params)
+    return cl.do(GET, cl.Name + "/_all_docs", nil, params)
 }
 
 
 // get docs by keys
 func (cl *Database)GetDocumentsByKeys(body map[string]interface{}) (j map[string]interface{}, err error){
-    return cl.doConfig(GET, "_all_docs", body, nil)
+    return cl.do(GET, cl.Name + "/_all_docs", body, nil)
 }
 
 // update/insert/delete bulk documents
@@ -71,59 +63,35 @@ func (cl *Database)DeleteBulkDocuments(body map[string]interface{}) (j map[strin
 }
 
 func (cl *Database)bulkDocuments(body map[string]interface{}) (j map[string]interface{}, err error){
-    return cl.doConfig(POST, "_bulk_docs", body, nil)
+    return cl.do(POST, cl.Name + "/_bulk_docs", body, nil)
 }
 
 // compact database
 func (cl *Database)Compact() (j map[string]interface{}, err error) {
-    return cl.doConfig(POST, "_compact", nil, nil)
+    return cl.do(POST, cl.Name + "/_compact", nil, nil)
 }
 
 // compact design doc
 func (cl *Database)CompactDesignDoc(designDoc string) (j map[string]interface{}, err error) {
-    return cl.doConfig(POST, "_compact/" + designDoc, nil, nil)
+    return cl.do(POST, cl.Name + "/_compact/" + designDoc, nil, nil)
 }
 
 // ensure full commit
 func (cl *Database)EnsureFullCommit()(j map[string]interface{}, err error) {
-    return cl.doConfig(POST, "_ensure_full_commit", nil, nil)
+    return cl.do(POST, cl.Name + "/_ensure_full_commit", nil, nil)
 }
 
 // clean db view
 func (cl *Database)ViewCleanUp() (j map[string]interface{}, err error) {
-    return cl.doConfig(POST, "_view_cleanup", nil, nil)
+    return cl.do(POST, cl.Name + "/_view_cleanup", nil, nil)
 }
 
 // get db security
 func (cl *Database)GetSecurity() (j map[string]interface{}, err error) {
-    return cl.doConfig(GET, "_security", nil, nil)
+    return cl.do(GET, cl.Name + "/_security", nil, nil)
 }
 
 // set db security
 func (cl *Database)SetSecurity(body map[string]interface{}) (j map[string]interface{}, err error) {
-    return cl.doConfig(POST, "_security", body, nil)
-}
-
-// wrapper for just a simple db config like compact and clean views
-func (cl *Database)doConfig(method, path string, body map[string]interface{}, params map[string]string) (j map[string]interface{}, err error) {
-    path = cl.Name + "/" + path
-
-    if params != nil {
-        path = cl.joinParams(path, params)
-    }
-
-    var ir io.Reader
-
-    if body != nil {
-        ir, err = cl.handleBodyData(body)
-
-        if err != nil {
-            return j, err
-        }
-
-    } else {
-        ir = nil
-    }
-
-    return cl.request(method, path, ir)
+    return cl.do(POST, cl.Name + "/_security", body, nil)
 }
