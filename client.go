@@ -66,12 +66,12 @@ func (cl *Client)Replicate(task *ReplicateTask) (j map[string]interface{}, err e
         body["cancel"] = task.Cancel
     }
 
-    str, err := cl.handParams(body)
+    ir, err := cl.handleBodyData(body)
 
     if err != nil {
         return j, err
     }
 
-    return cl.request(POST, "_replicate", str)
+    return cl.request(POST, "_replicate", ir)
 }
 
