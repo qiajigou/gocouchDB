@@ -74,6 +74,30 @@ Yet another CouchDB GO Client
     ret, err := client.Replicate(task)
 
 
+## do function
+
+    // You could do anything with do
+    // this is ClientBase
+    // you can do that in every Class
+    // like Database, Document...
+    // Here we call this cl
+    // if we need a couchdb interface like:
+    // dsn/_replicate?param1=value1
+
+    body = map[string]interface{} {
+        "source": "source_db",
+        "target": "target_db",
+    }
+
+    params = map[string]string {
+        "param1": "value1"
+    }
+
+    cl.do(POST, "_replicate", body, params)
+
+    // you could see Compact in Database class
+    // everything is using do function (but _all_dbs)
+
 ## TODO
 
 1. Add tests

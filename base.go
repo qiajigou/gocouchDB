@@ -24,11 +24,14 @@ type ReplicateTask struct {
     DocumentIDs []string
 }
 
+
+// set basic auth
 func (cl *ClientBase)SetAuth(username, password string) {
     cl.Username = username
     cl.Password = password
 }
 
+// called everytime a new request
 func (cl *ClientBase)beforeRequest() {
     if cl.Username != "" && cl.Password != "" {
         auth := []byte(cl.Username + ":" + cl.Password)
@@ -38,12 +41,21 @@ func (cl *ClientBase)beforeRequest() {
     cl.Headers["Content-Type"] = "application/json"
 }
 
+// clean everytime after a request
+func (cl *ClientBase)afterRequest() {
+    cl.ClearHeaders()
+}
+
+// basic request method for calling the transport
+// and clean headers every time
+// so we could do something before request
+// and defer close something
 func (cl *ClientBase)request(method, path string, body io.Reader)(j map[string]interface{}, err error) {
     cl.beforeRequest()
 
     j, err = cl.transport.request(method, path, body, cl.Headers)
 
-    defer cl.ClearHeaders()
+    defer cl.afterRequest()
 
     if err != nil {
         return j, err
@@ -52,6 +64,8 @@ func (cl *ClientBase)request(method, path string, body io.Reader)(j map[string]i
     return j, err
 }
 
+// this is tricky beacuse couchdb _all_dbs return list
+// not a map[string]interface{} :(
 func (cl *ClientBase)requestList(method, path string, body io.Reader)(j []string, err error) {
     cl.beforeRequest()
 
@@ -66,6 +80,7 @@ func (cl *ClientBase)requestList(method, path string, body io.Reader)(j []string
     return j, err
 }
 
+// handle map[string]interface{} to json body
 func (cl *ClientBase)handleBodyData(body map[string]interface{}) (ret *strings.Reader, err error) {
     json, err := json.Marshal(body)
 
@@ -79,6 +94,7 @@ func (cl *ClientBase)handleBodyData(body map[string]interface{}) (ret *strings.R
 
 }
 
+// join map[string][string] to url params
 func (cl *ClientBase)joinParams(path string, params map[string]string) (url string) {
 
     sl := make([]string, len(params))
@@ -101,6 +117,29 @@ func (cl *ClientBase)joinParams(path string, params map[string]string) (url stri
     }
 
     return p
+}
+
+// base request method for self
+func (cl *ClientBase)do(method, path string, body map[string]interface{}, params map[string]string) (j map[string]interface{}, err error) {
+
+    if params != nil {
+        path = cl.joinParams(path, params)
+    }
+
+    var ir io.Reader
+
+    if body != nil {
+        ir, err = cl.handleBodyData(body)
+
+        if err != nil {
+            return j, err
+        }
+
+    } else {
+        ir = nil
+    }
+
+    return cl.request(method, path, ir)
 }
 
 func (cl *ClientBase)SetHeaders(headers map[string]string) {

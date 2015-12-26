@@ -26,7 +26,7 @@ func (cl *Document)path() (url string) {
 
 // get info of the document
 func (cl *Document)GetInfo() (j map[string]interface{}, err error) {
-    return cl.request(GET, cl.path(), nil)
+    return cl.do(GET, cl.path(), nil, nil)
 }
 
 // get leaf node of the couchdb B-tree
@@ -53,7 +53,7 @@ func (cl *Document)GetInfoByReversion(rev string) (j map[string]interface{}, err
 // like GetInfoByReversion
 func (cl *Document)GetInfoByParams(params map[string]string) (j map[string]interface{}, err error) {
     path := cl.joinParams(cl.path(), params)
-    return cl.request(GET, path, nil)
+    return cl.do(GET, path, nil, nil)
 }
 
 // get reversion of the document
@@ -78,13 +78,7 @@ func (cl *Document)Update(body map[string]interface{}) (j map[string]interface{}
 
     body["_rev"] = rev
 
-    ir, err := cl.handleBodyData(body)
-
-    if err != nil {
-        return j, err
-    }
-
-    return cl.request(PUT, cl.path(), ir)
+    return cl.do(PUT, cl.path(), body, nil)
 }
 
 // delete document by update _deleted
@@ -115,7 +109,7 @@ func (cl *Document)CreateAttachment(attname string, data io.Reader, headers map[
 
 // get attachment
 func (cl *Document)GetAttachment(attname string) (j map[string]interface{}, err error) {
-    return cl.request(GET, cl.attachmentPath(attname), nil)
+    return cl.do(GET, cl.attachmentPath(attname), nil, nil)
 }
 
 // delete attachment
@@ -132,8 +126,6 @@ func (cl *Document)DeleteAttachment(attname string) (j map[string]interface{}, e
 // create attachment
 func (cl *Document)CreateAttachmentByReversion(attname, rev string, data io.Reader, headers map[string]string) (j map[string]interface{}, err error) {
     path := cl.attachmentPath(attname) + "?rev=" + rev
-
-    cl.SetHeaders(headers)
     return cl.request(PUT, path, data)
 }
 
@@ -147,12 +139,12 @@ func (cl *Document)GetAttachmentByReversion(attname, rev string) (j map[string]i
     }
 
     path = path + "?rev=" + rev
-    return cl.request(GET, cl.attachmentPath(attname), nil)
+    return cl.do(GET, cl.attachmentPath(attname), nil, nil)
 }
 
 // delete attachment
 func (cl *Document)DeleteAttachmentByReversion(attname, rev string) (j map[string]interface{}, err error) {
     path := cl.attachmentPath(attname) + "?rev=" + rev
-    return cl.request(DELETE, path, nil)
+    return cl.do(DELETE, path, nil, nil)
 }
 
