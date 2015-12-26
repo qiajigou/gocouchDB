@@ -78,13 +78,13 @@ func (cl *Document)Update(body map[string]interface{}) (j map[string]interface{}
 
     body["_rev"] = rev
 
-    str, err := cl.handParams(body)
+    ir, err := cl.handleBodyData(body)
 
     if err != nil {
         return j, err
     }
 
-    return cl.request(PUT, cl.path(), str)
+    return cl.request(PUT, cl.path(), ir)
 }
 
 // delete document by update _deleted

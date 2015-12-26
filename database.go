@@ -27,7 +27,7 @@ func (cl *Database)Delete() (j map[string]interface{}, err error) {
 
 // create document
 func (cl *Database)CreateDocument(key string, body map[string]interface{}) (j map[string]interface{}, err error){
-    str, err := cl.handParams(body)
+    ir, err := cl.handleBodyData(body)
 
     if err != nil {
         return j, err
@@ -35,7 +35,7 @@ func (cl *Database)CreateDocument(key string, body map[string]interface{}) (j ma
 
     path := cl.Name + "/" + key
 
-    return cl.request(PUT, path, str)
+    return cl.request(PUT, path, ir)
 }
 
 // get document
@@ -112,18 +112,18 @@ func (cl *Database)doConfig(method, path string, body map[string]interface{}, pa
         path = cl.joinParams(path, params)
     }
 
-    var str io.Reader
+    var ir io.Reader
 
     if body != nil {
-        str, err = cl.handParams(body)
+        ir, err = cl.handleBodyData(body)
 
         if err != nil {
             return j, err
         }
 
     } else {
-        str = nil
+        ir = nil
     }
 
-    return cl.request(method, path, str)
+    return cl.request(method, path, ir)
 }

@@ -76,5 +76,6 @@ Yet another CouchDB GO Client
 
 ## TODO
 
-1. ETag support
-2. Cache support (memory/memcached/redis)
+1. Add tests
+2. ETag support
+3. Cache support (memory/memcached/redis)

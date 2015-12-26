@@ -66,10 +66,8 @@ func (cl *ClientBase)requestList(method, path string, body io.Reader)(j []string
     return j, err
 }
 
-func (cl *ClientBase)handParams(body map[string]interface{}) (ret *strings.Reader, err error) {
+func (cl *ClientBase)handleBodyData(body map[string]interface{}) (ret *strings.Reader, err error) {
     json, err := json.Marshal(body)
-
-    defer cl.ClearHeaders()
 
     if err != nil {
         return ret, err
