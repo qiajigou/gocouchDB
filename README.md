@@ -63,9 +63,18 @@ Yet another CouchDB GO Client
     db.GetDocument("doc")
     // ...
 
+## Replicate
+
+    task := new(gocouch.ReplicateTask)
+    task.Continuous = false
+    task.CreateTarget = true
+    task.Source = "duidui"
+    task.Target = "duidui_backup"
+
+    ret, err := client.Replicate(task)
+
+
 ## TODO
 
-1. Bulk set/get
-2. Replicator
-3. ETag support
-4. Cache support (memory/memcached/redis)
+1. ETag support
+2. Cache support (memory/memcached/redis)

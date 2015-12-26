@@ -14,6 +14,16 @@ type ClientBase struct {
     transport ITransport
 }
 
+type ReplicateTask struct {
+    Source string
+    Target string
+    Proxy string
+    Continuous bool
+    CreateTarget bool
+    Cancel bool
+    DocumentIDs []string
+}
+
 func (cl *ClientBase)SetAuth(username, password string) {
     cl.Username = username
     cl.Password = password
@@ -25,6 +35,7 @@ func (cl *ClientBase)beforeRequest() {
         hashed := "Basic " + base64.StdEncoding.EncodeToString(auth)
         cl.Headers["Authorization"] = string(hashed)
     }
+    cl.Headers["Content-Type"] = "application/json"
 }
 
 func (cl *ClientBase)request(method, path string, body io.Reader)(j map[string]interface{}, err error) {
