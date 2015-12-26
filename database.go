@@ -114,13 +114,13 @@ func (cl *Database)doConfig(method, path string, body map[string]interface{}, pa
 
     var str io.Reader
 
-    headers := map[string]string {
-        "Content-Type": "application/json",
-    }
-    cl.SetHeaders(headers)
-
     if body != nil {
         str, err = cl.handParams(body)
+
+        if err != nil {
+            return j, err
+        }
+
     } else {
         str = nil
     }

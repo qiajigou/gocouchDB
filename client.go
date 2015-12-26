@@ -44,3 +44,34 @@ func (cl *Client)GetDatabase(dbName string) (d *Database, err error) {
     return d, err
 }
 
+// replicate database
+func (cl *Client)Replicate(task *ReplicateTask) (j map[string]interface{}, err error) {
+
+    body := map[string]interface{}{
+        "continuous": task.Continuous,
+        "create_target": task.CreateTarget,
+        "source": task.Source,
+        "target": task.Target,
+    }
+
+    if task.DocumentIDs != nil {
+        body["doc_ids"] = task.DocumentIDs
+    }
+
+    if task.Proxy != "" {
+        body["proxy"] = task.Proxy
+    }
+
+    if task.Cancel {
+        body["cancel"] = task.Cancel
+    }
+
+    str, err := cl.handParams(body)
+
+    if err != nil {
+        return j, err
+    }
+
+    return cl.request(POST, "_replicate", str)
+}
+
