@@ -97,9 +97,3 @@ Yet another CouchDB GO Client
 
     // you could see Compact in Database class
     // everything is using do function (but _all_dbs)
-
-## TODO
-
-1. Add tests
-2. ETag support
-3. Cache support (memory/memcached/redis)
