@@ -26,7 +26,7 @@ func (cl *Document)path() (url string) {
 
 // get info of the document
 func (cl *Document)GetInfo() (j map[string]interface{}, err error) {
-    return cl.do(GET, cl.path(), nil, nil)
+    return cl.Leaf()
 }
 
 // get leaf node of the couchdb B-tree
@@ -35,7 +35,7 @@ func (cl *Document)Leaf() (j map[string]interface{}, err error) {
         "leaf": "true",
     }
 
-    return cl.GetInfoByParams(params)
+    return cl.do(GET, cl.path(), nil, params)
 }
 
 // get info by reversion
@@ -45,15 +45,7 @@ func (cl *Document)GetInfoByReversion(rev string) (j map[string]interface{}, err
         "rev": rev,
     }
 
-    return cl.GetInfoByParams(params)
-}
-
-// get info by params
-// you can do anything you want with this function
-// like GetInfoByReversion
-func (cl *Document)GetInfoByParams(params map[string]string) (j map[string]interface{}, err error) {
-    path := cl.joinParams(cl.path(), params)
-    return cl.do(GET, path, nil, nil)
+    return cl.do(GET, cl.path(), nil, params)
 }
 
 // get reversion of the document

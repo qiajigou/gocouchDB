@@ -13,6 +13,13 @@ func main(){
     DSN := "http://localhost:5984"
     client := gocouchDB.NewClientByDSN(DSN)
 
+    cl, err := client.ListAllDatabases()
+
+    if err != nil {
+    }
+
+    fmt.Println(cl)
+
     // if couchdb dont't need username and password
     // remove this line
 

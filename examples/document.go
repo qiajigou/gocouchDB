@@ -50,6 +50,28 @@ func main(){
 
     }
 
+    fmt.Println("first hit the cache")
+    ret, err = doc.GetInfo()
+
+    body := map[string]interface{}{
+        "title": "This is title",
+        "content": "This is content",
+        "number": 102,
+    }
+
+    fmt.Println("update will change the Etag")
+    ret, err = doc.Update(body)
+    if err != nil {
+        // create error
+    }
+
+    fmt.Println("get document again.")
+    ret, err = doc.GetInfo()
+
+    fmt.Println("get document again..")
+    ret, err = doc.GetInfo()
+
+    fmt.Println("get document again...")
     ret, err = doc.GetInfo()
 
     for key, value := range ret {

@@ -11,4 +11,8 @@ type ITransport interface {
     requestList(method, path string, body io.Reader, headers map[string]string) (j []string, err error)
 }
 
-type ICache interface {}
+type ICache interface {
+    Get(key string, defaultValue interface{})(value interface{})
+    Set(key string, value interface{})(ret bool)
+    Delete(key string)(ret bool)
+}
