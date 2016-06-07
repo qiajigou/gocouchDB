@@ -28,116 +28,108 @@
     <div id="content-wrapper">
       <div class="inner clearfix">
         <section id="main-content">
-          <p>This project is in developing...</p>
-
-<p>Yet another CouchDB GO Client</p>
+          <p>Yet another CouchDB GO Client</p>
 
 <p>0.1 is for core API</p>
 
 <h2>
 <a id="quick-start" class="anchor" href="#quick-start" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Quick start</h2>
 
-<pre><code>// Client is your friend
-// Use Client everywhere you want :)
+<div class="highlight highlight-source-go"><pre><span class="pl-c">// Client is your friend</span>
+<span class="pl-c">// Use Client everywhere you want :)</span>
 
-import (
-    "github.com/GuoJing/gocouchDB"
+<span class="pl-k">import</span> (
+    <span class="pl-s"><span class="pl-pds">"</span>github.com/GuoJing/gocouchDB<span class="pl-pds">"</span></span>
 )
 
-dsn := "http://localhost:5984"
-client := gocouchDB.NewClientByDSN(dsn)
+<span class="pl-smi">dsn</span> <span class="pl-k">:=</span> <span class="pl-s"><span class="pl-pds">"</span>http://localhost:5984<span class="pl-pds">"</span></span>
+<span class="pl-smi">client</span> <span class="pl-k">:=</span> gocouchDB.<span class="pl-c1">NewClientByDSN</span>(dsn)
 
-db, err := client.GetDatabase("duidui")
+<span class="pl-smi">db</span>, <span class="pl-smi">err</span> <span class="pl-k">:=</span> client.<span class="pl-c1">GetDatabase</span>(<span class="pl-s"><span class="pl-pds">"</span>duidui<span class="pl-pds">"</span></span>)
 
-if err != nil {}
+<span class="pl-k">if</span> err != <span class="pl-c1">nil</span> {}
 
-doc, err := db.GetDocument("test")
+<span class="pl-smi">doc</span>, <span class="pl-smi">err</span> <span class="pl-k">:=</span> db.<span class="pl-c1">GetDocument</span>(<span class="pl-s"><span class="pl-pds">"</span>test<span class="pl-pds">"</span></span>)
 
-body := map[string]interface{} {
-    "title" : "Haha223334444",
-    "body"  : "Not at all",
+<span class="pl-smi">body</span> <span class="pl-k">:=</span> <span class="pl-k">map</span>[<span class="pl-k">string</span>]<span class="pl-k">interface</span>{} {
+    <span class="pl-s"><span class="pl-pds">"</span>title<span class="pl-pds">"</span></span> : <span class="pl-s"><span class="pl-pds">"</span>Haha223334444<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>body<span class="pl-pds">"</span></span>  : <span class="pl-s"><span class="pl-pds">"</span>Not at all<span class="pl-pds">"</span></span>,
 }
 
-doc.Update(body)
+doc.<span class="pl-c1">Update</span>(body)
 
-// Or
-// doc.Delete()
-</code></pre>
+<span class="pl-c">// Or</span>
+<span class="pl-c">// doc.Delete()</span></pre></div>
 
 <h2>
 <a id="transport" class="anchor" href="#transport" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Transport</h2>
 
-<pre><code>//interface ITransport! &lt;- you can do it yourself
-transport := NewTransport(dsn)
+<div class="highlight highlight-source-go"><pre><span class="pl-c">//interface ITransport! &lt;- you can do it yourself</span>
+<span class="pl-smi">transport</span> <span class="pl-k">:=</span> <span class="pl-c1">NewTransport</span>(dsn)
 
-client := gocouchDB.NewClientByTransport(transport)
-</code></pre>
+<span class="pl-smi">client</span> <span class="pl-k">:=</span> gocouchDB.<span class="pl-c1">NewClientByTransport</span>(transport)</pre></div>
 
 <h2>
 <a id="visit-without-client" class="anchor" href="#visit-without-client" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Visit without Client</h2>
 
-<pre><code>transport := NewTransport(dsn)
-db := NewDatabase(dbName, transport)
-doc, err := db.GetDocument(Name)
+<div class="highlight highlight-source-go"><pre><span class="pl-smi">transport</span> <span class="pl-k">:=</span> <span class="pl-c1">NewTransport</span>(dsn)
+<span class="pl-smi">db</span> <span class="pl-k">:=</span> <span class="pl-c1">NewDatabase</span>(dbName, transport)
+<span class="pl-smi">doc</span>, <span class="pl-smi">err</span> <span class="pl-k">:=</span> db.<span class="pl-c1">GetDocument</span>(Name)
 
-doc = NewDocument(dbName, Name, transport)
-doc.Delete()
-</code></pre>
+doc = <span class="pl-c1">NewDocument</span>(dbName, <span class="pl-v">Name</span>, transport)
+doc.<span class="pl-c1">Delete</span>()</pre></div>
 
 <h2>
 <a id="auth" class="anchor" href="#auth" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Auth</h2>
 
-<pre><code>client := gocouchDB.NewClientByDSN(dsn)
-client.SetAuth(Username, Password)
-client.GetDatabase("duidui")
-// ...
+<div class="highlight highlight-source-go"><pre><span class="pl-smi">client</span> <span class="pl-k">:=</span> gocouchDB.<span class="pl-c1">NewClientByDSN</span>(dsn)
+client.<span class="pl-c1">SetAuth</span>(Username, <span class="pl-v">Password</span>)
+client.<span class="pl-c1">GetDatabase</span>(<span class="pl-s"><span class="pl-pds">"</span>duidui<span class="pl-pds">"</span></span>)
+<span class="pl-c">// ...</span>
 
-// or
+<span class="pl-c">// or</span>
 
-transport := NewTransport(dsn)
-db := NewDatabase(dbName, transport)
-db.SetAuth(Username, Password)
-db.GetDocument("doc")
-// ...
-</code></pre>
+<span class="pl-smi">transport</span> <span class="pl-k">:=</span> <span class="pl-c1">NewTransport</span>(dsn)
+<span class="pl-smi">db</span> <span class="pl-k">:=</span> <span class="pl-c1">NewDatabase</span>(dbName, transport)
+db.<span class="pl-c1">SetAuth</span>(Username, <span class="pl-v">Password</span>)
+db.<span class="pl-c1">GetDocument</span>(<span class="pl-s"><span class="pl-pds">"</span>doc<span class="pl-pds">"</span></span>)
+<span class="pl-c">// ...</span></pre></div>
 
 <h2>
 <a id="replicate" class="anchor" href="#replicate" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Replicate</h2>
 
-<pre><code>task := new(gocouchDB.ReplicateTask)
-task.Continuous = false
-task.CreateTarget = true
-task.Source = "duidui"
-task.Target = "duidui_backup"
+<div class="highlight highlight-source-go"><pre><span class="pl-smi">task</span> <span class="pl-k">:=</span> <span class="pl-c1">new</span>(gocouchDB.<span class="pl-smi">ReplicateTask</span>)
+task.<span class="pl-smi">Continuous</span> = <span class="pl-c1">false</span>
+task.<span class="pl-smi">CreateTarget</span> = <span class="pl-c1">true</span>
+task.<span class="pl-smi">Source</span> = <span class="pl-s"><span class="pl-pds">"</span>duidui<span class="pl-pds">"</span></span>
+task.<span class="pl-smi">Target</span> = <span class="pl-s"><span class="pl-pds">"</span>duidui_backup<span class="pl-pds">"</span></span>
 
-ret, err := client.Replicate(task)
-</code></pre>
+<span class="pl-smi">ret</span>, <span class="pl-smi">err</span> <span class="pl-k">:=</span> client.<span class="pl-c1">Replicate</span>(task)</pre></div>
 
 <h2>
 <a id="do-function" class="anchor" href="#do-function" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>do function</h2>
 
-<pre><code>// You could do anything with do
-// this is ClientBase
-// you can do that in every Class
-// like Database, Document...
-// Here we call this cl
-// if we need a couchdb interface like:
-// dsn/_replicate?param1=value1
+<div class="highlight highlight-source-go"><pre><span class="pl-c">// You could do anything with do</span>
+<span class="pl-c">// this is ClientBase</span>
+<span class="pl-c">// you can do that in every Class</span>
+<span class="pl-c">// like Database, Document...</span>
+<span class="pl-c">// Here we call this cl</span>
+<span class="pl-c">// if we need a couchdb interface like:</span>
+<span class="pl-c">// dsn/_replicate?param1=value1</span>
 
-body = map[string]interface{} {
-    "source": "source_db",
-    "target": "target_db",
+body = <span class="pl-k">map</span>[<span class="pl-k">string</span>]<span class="pl-k">interface</span>{} {
+    <span class="pl-s"><span class="pl-pds">"</span>source<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>source_db<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>target<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>target_db<span class="pl-pds">"</span></span>,
 }
 
-params = map[string]string {
-    "param1": "value1"
+params = <span class="pl-k">map</span>[<span class="pl-k">string</span>]<span class="pl-k">string</span> {
+    <span class="pl-s"><span class="pl-pds">"</span>param1<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>value1<span class="pl-pds">"</span></span>
 }
 
-cl.do(POST, "_replicate", body, params)
+cl.<span class="pl-c1">do</span>(POST, <span class="pl-s"><span class="pl-pds">"</span>_replicate<span class="pl-pds">"</span></span>, body, params)
 
-// you could see Compact in Database class
-// everything is using do function (but _all_dbs)
-</code></pre>
+<span class="pl-c">// you could see Compact in Database class</span>
+<span class="pl-c">// everything is using do function (but _all_dbs)</span></pre></div>
         </section>
 
         <aside id="sidebar">
